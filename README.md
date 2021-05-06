@@ -6,8 +6,5 @@ Vim plugin that adds "Load All" option to W12 file changed dialog instead of ask
 
 ## TODO
 
-- [ ] Check different [reasons](https://neovim.io/doc/user/eval.html#v:fcs_reason) ('mode', 'time', 'deleted' etc)
-- [ ] Check how it works with [autoread](https://neovim.io/doc/user/options.html#'autoread') off.
 - [ ] Localization
-- [ ] Don't checktime all if you did not select "Load All"?
 - [ ] Make it look nicer than default confirm dialog?

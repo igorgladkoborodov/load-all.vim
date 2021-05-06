@@ -1,8 +1,11 @@
 let s:reload_all = 0
+let s:deleted_files = {} 
 
-function! s:HandleFileChanged(file, reason)
-  " TODO: reload automatically if reason is `mode` or `time`
-  if s:reload_all
+function! s:HandleFileChanged(file, buffer, reason)
+  let current_buffer = bufnr()
+  if a:reason == 'deleted'
+    let s:deleted_files[a:buffer] = a:file
+  elseif s:reload_all || a:reason == 'mode' || a:reason == 'time'
     let v:fcs_choice = "reload"
   else
     let choice = confirm("W12: Warning: File \"" . a:file . "\" has changed and the buffer was changed in Vim as well\nSee \":help W12\" for more info.", "&OK\n&Load File\nLoad &All")
@@ -11,21 +14,35 @@ function! s:HandleFileChanged(file, reason)
     elseif choice == 3
       let v:fcs_choice = "reload"
       let s:reload_all = 1
+      " Use timer as workaround to trigger FileChangedShell for other possibly changed files
+      cal timer_start(0, { -> execute('call s:ChecktimeAll()') })
+      " Use timer as workaround to unset s:reload_all after all files are reloaded
       cal timer_start(0, { -> execute('let s:reload_all = 0') })
     endif
   endif
 endfunction
 
+function! s:ShowDeletedError()
+  if has_key(s:deleted_files, bufnr())
+    echohl ErrorMsg
+    echomsg 'E211: File "' . s:deleted_files[bufnr()] . '" no longer available'
+    echohl None
+    unlet s:deleted_files[bufnr()]
+  endif
+endfunction
+
 function! s:ChecktimeAll()
+  let s:deleted_files = {}
   let buffers = map(filter(copy(getbufinfo()), 'v:val.listed'), 'v:val.bufnr')
   for i in buffers
     execute 'checktime ' . i
   endfor
+  let s:checktime_all = 0
 endfunction
 
 augroup ReloadChanged
   autocmd!
-  autocmd FileChangedShell * call s:HandleFileChanged(expand("<afile>"), v:fcs_reason)
-  autocmd FocusGained,CursorHold * ++nested call s:ChecktimeAll()
+  autocmd FileChangedShell * call s:HandleFileChanged(expand("<afile>"), expand("<abuf>"), v:fcs_reason)
+  autocmd BufEnter * call s:ShowDeletedError()
 augroup END
 
