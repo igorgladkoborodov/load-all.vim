@@ -8,7 +8,13 @@ function! s:HandleFileChanged(file, buffer, reason)
   elseif s:reload_all || a:reason == 'mode' || a:reason == 'time'
     let v:fcs_choice = "reload"
   else
-    let choice = confirm("W12: Warning: File \"" . a:file . "\" has changed and the buffer was changed in Vim as well\nSee \":help W12\" for more info.", "&OK\n&Load File\nLoad &All")
+    if a:reason == 'changed'
+      let message = "W11: Warning: File \"" . a:file . "\" has changed since editing started\nSee \":help W11\" for more info."
+    else
+      let message = "W12: Warning: File \"" . a:file . "\" has changed and the buffer was changed in Vim as well\nSee \":help W12\" for more info."
+    endif
+
+    let choice = confirm(message, "&OK\n&Load File\nLoad &All")
     if choice == 2
       let v:fcs_choice = "reload"
     elseif choice == 3
