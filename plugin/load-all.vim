@@ -49,6 +49,8 @@ endfunction
 augroup ReloadChanged
   autocmd!
   autocmd FileChangedShell * call s:HandleFileChanged(expand("<afile>"), expand("<abuf>"), v:fcs_reason)
+  autocmd FocusGained * checktime
+  autocmd CursorHold * checktime
   autocmd BufEnter * call s:ShowDeletedError()
 augroup END
 
