@@ -1,18 +1,21 @@
 # load-all.vim
 
-Vim plugin that adds "Load All" option to the warning dialog when a file is changed outside Vim.
+A Vim plugin that adds a "Load All" option to the warning dialog displayed when a file is changed
+outside of Vim.
 
-If files opened in Vim are changed outside of the editor, for example when you switch Git branches
-or after a shell command, Vim will show a warning and ask to reload the file or keep the existing
-version (warning [W11](https://neovim.io/doc/user/message.html#W11) or
-[W12](https://neovim.io/doc/user/message.html#W12)). These warning errors will occur every time you
-open any changed file and can be annoying when multiple files are changed.
+If files opened in Vim are changed externally, for instance, when switching Git branches or
+following the execution of a shell command, Vim will display a warning. This warning prompts the
+user to either reload the file or keep the current version (triggered by warning codes
+[W11](https://neovim.io/doc/user/message.html#W11) or
+[W12](https://neovim.io/doc/user/message.html#W12)). These warnings are presented every time any
+changed file is opened, which can be cumbersome when multiple files have been modified.
 
-This plugin adds a "Load All" option to reload all changed files and to prevent Vim from asking
-again. The plugin works similar to the same dialog in MacVim.
+This plugin introduces a "Load All" option to the warning dialog, allowing for the reloading of all
+changed files at once and preventing Vim from issuing repeated prompts. The functionality of this
+plugin is similar to the corresponding dialog in MacVim.
 
-The plugin wil also autoupdate file timestamps if the file contents are the same and only the mode
-or timestamp was changed.
+Additionally, the plugin will automatically update file timestamps if the content remains unchanged
+and only the file's mode or timestamp has been altered.
 
 ## License
 
